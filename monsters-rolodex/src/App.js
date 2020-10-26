@@ -1,6 +1,7 @@
 // Class Component
 import React, {Component} from 'react';
 import {CardList} from './components/card-list/card-list.component';
+import {SearchBox} from './components/search-box/search-box.component';
 import './App.css';
 
 class App extends Component{
@@ -10,8 +11,11 @@ class App extends Component{
 
     this.state = { // chứa nhiều loại thuộc tính.
       monsters: [],
+      // set gia tri cua tim kiem = trong de tra ve toan bo du lieu
       searchField1: ''
     };
+    this.handleChange = this.handleChange.bind(this);
+    //this.sukienclick2 = this.sukienclick.bind(this);
   }
   // Life Cycle Methods
   componentDidMount(){
@@ -20,17 +24,27 @@ class App extends Component{
     .then(reponse => reponse.json())
     .then(user => this.setState({monsters: user}))
   }
+  handleChange = (e) => {
+    this.setState({searchField1: e.target.value});
+    //TypeError: Unable to get property 'setState' of undefined or null reference
+  }
+  // sukienclick(){
+  //   console.log(this)
+  // }
+  // sukienclick2 = () => console.log('click2');
   render(){
-
+    const { monsters, searchField1 } = this.state;
+    //fillter Phuong pháp tìm kiếm phần tử đơn lẻ và trả về true
+    const filteredMonsters = monsters.filter(monte =>
+      monte.name.toLowerCase().includes(searchField1.toLowerCase()));
     return (
       <div className="App">
-        <input type='search' placeholder='Tim kiem?' onChange={e => {
-          this.setState({searchField1: e.target.value}, ()=> console.log(this.state));
-          
-        }}
-          />
-
-        <CardList nhat = {this.state.monsters}>
+        <h1> Trang chu </h1>
+        <SearchBox
+          placeholder='Tìm kiếm!'
+          handleChange={this.handleChange}
+        />
+        <CardList nhat = {filteredMonsters}>
         
         </CardList>
       </div>
